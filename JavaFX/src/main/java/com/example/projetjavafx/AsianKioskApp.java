@@ -73,7 +73,7 @@ public class AsianKioskApp extends Application {
         menuTitle.setFont(Font.font("System", FontWeight.BOLD, 18));
         menuTitle.setFill(Color.web(COLOR_TEXT));
 
-      ush  productGridView = new ProductGridView(COLOR_ACCENT, (nom, prix) -> showProductDetails(nom, prix, null));
+        productGridView = new ProductGridView(COLOR_ACCENT, (nom, prix) -> showProductDetails(nom, prix, null));
         productGridView.updateContent(categorieActuelle);
 
         centerLayout.getChildren().addAll(trendLabel, carouselView.getView(), menuTitle, productGridView.getView());
