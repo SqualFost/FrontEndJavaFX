@@ -75,7 +75,7 @@ public class CartSidebarView {
             actions.setAlignment(Pos.CENTER);
 
             // Bouton Modifier ✏️
-            Button edit = new Button("✏️");
+            Button edit = new Button("✏");
             edit.setStyle("-fx-background-color: transparent; -fx-cursor: hand;");
             edit.setOnAction(e -> {
                 if (onEditItem != null) {
