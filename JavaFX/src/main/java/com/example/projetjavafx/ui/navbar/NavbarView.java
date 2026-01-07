@@ -50,7 +50,7 @@ public class NavbarView {
         navbar.setAlignment(Pos.CENTER_LEFT);
         navbar.setStyle("-fx-background-color: white; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 5);");
 
-        Text logo = new Text("O'ZenLihn");
+        Text logo = new Text("Click&Wok");
         logo.setFill(Color.web(colorText));
         logo.setFont(Font.font("Arial", FontWeight.BOLD, 26));
 

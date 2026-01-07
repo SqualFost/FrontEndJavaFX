@@ -12,7 +12,7 @@ public class BorneApplication extends Application {
     public void start(Stage stage) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(BorneApplication.class.getResource("home.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1920, 1080);
-        stage.setTitle("Borne Asian Food");
+        stage.setTitle("Borne Click&Wok");
         stage.setScene(scene);
         stage.show();
     }

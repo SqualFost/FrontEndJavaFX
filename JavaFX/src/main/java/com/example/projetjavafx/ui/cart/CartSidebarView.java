@@ -6,6 +6,7 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.control.Separator;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -21,7 +22,6 @@ import java.util.function.Consumer;
  * et de la mise à jour de son contenu à partir du CartService.
  */
 public class CartSidebarView {
-
     private final CartService cartService;
     private final String colorAccent;
     private final Consumer<CartItem> onEditItem;
@@ -37,7 +37,7 @@ public class CartSidebarView {
         this.cartService = cartService;
         this.colorAccent = colorAccent;
         this.onEditItem = onEditItem;
-        this.onPayAction = onPayAction; // On l'enregistre bien maintenant
+        this.onPayAction = onPayAction;
         this.root = createOrderSidebar();
         refresh();
     }
@@ -49,17 +49,17 @@ public class CartSidebarView {
     public void refresh() {
         itemList.getChildren().clear();
 
-        for (CartItem item : cartService.getItems()) {
+        for (int i = 0; i < cartService.getItems().size(); i++) {
+            CartItem item = cartService.getItems().get(i);
+
             HBox row = new HBox(10);
             row.setPadding(new Insets(12));
             row.setAlignment(Pos.CENTER_LEFT);
-            row.setStyle("-fx-background-color: #FAFAFA; -fx-background-radius: 12; -fx-border-color: #EEE;");
 
             VBox info = new VBox(2);
             Text n = new Text(item.getNom());
             n.setFont(Font.font("System", FontWeight.BOLD, 13));
-
-            Text optsTxt = new Text(item.getOptions().isEmpty() ? "Standard" : String.join(", ", item.getOptions()));
+            Text optsTxt = new Text(item.getOptions().isEmpty() ? "Standard" : String.join("\n", item.getOptions()));
             optsTxt.setFont(Font.font(10));
             optsTxt.setFill(javafx.scene.paint.Color.GRAY);
 
@@ -106,6 +106,13 @@ public class CartSidebarView {
             actions.getChildren().addAll(edit, minus, quantityText, plus, delete);
             row.getChildren().addAll(info, spacer, actions);
             itemList.getChildren().add(row);
+
+            if (i < cartService.getItems().size() - 1) {
+                Region sep = new Region();
+                sep.setStyle("-fx-pref-height: 1; -fx-min-height: 1; -fx-max-height: 1; -fx-background-color: #E5E5E5; -fx-opacity: 1; -fx-margin: 6 0 6 0;");
+                sep.getStyleClass().add("cart-separator");
+                itemList.getChildren().add(sep);
+            }
         }
 
         double total = cartService.calculerTotal();
@@ -144,9 +151,11 @@ public class CartSidebarView {
         btnPay.setPrefHeight(60);
         btnPay.setStyle("-fx-background-color: " + colorAccent + "; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 15;");
         btnPay.setOnAction(e -> {
-            if (onPayAction != null) {
+            if (onPayAction != null && (Float.parseFloat(totalAmountDisplay.getText().replace("€", "").replace(",", "")) > 0)) {
                 onPayAction.run();
             }
+            else
+                System.out.print("Aucun plat a payer.");
         });
         sidebar.getChildren().addAll(title, scroll, spacer, totalRow, btnPay);
         return sidebar;
