@@ -1,15 +1,21 @@
 package com.example.projetjavafx.ui.carousel;
 
+import com.example.projetjavafx.config.ApiConfig;
+import com.example.projetjavafx.model.Product;
+import com.example.projetjavafx.service.ApiService;
 import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -18,6 +24,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.util.Duration;
 
+import java.util.List;
 import java.util.function.BiConsumer;
 
 public class CarouselView {
@@ -29,6 +36,7 @@ public class CarouselView {
 
     private final BiConsumer<String, Double> onAddToCart;
     private final BiConsumer<String, Double> onShowDetails;
+    private final ApiService apiService;
 
     private final double CARD_SPACING = 15.0;
     private final double CARD_WIDTH = 200.0; // Encore plus petit
@@ -40,6 +48,7 @@ public class CarouselView {
         this.colorAccent = colorAccent;
         this.onAddToCart = onAddToCart;
         this.onShowDetails = onShowDetails;
+        this.apiService = new ApiService();
 
         this.root = new AnchorPane();
         this.cardsContainer = new HBox(CARD_SPACING);
@@ -100,10 +109,26 @@ public class CarouselView {
     private void initPlats(String cat) {
         cardsContainer.getChildren().clear();
         cardsContainer.setPadding(new Insets(5));
-        for (int i = 1; i <= 8; i++) {
-            VBox card = createMiniCard(cat + " Pop " + i, 10.0 + i);
-            cardsContainer.getChildren().add(card);
-        }
+        
+        // Charger les données depuis le backend de manière asynchrone
+        new Thread(() -> {
+            List<Product> products = apiService.getPlatsByCategorie(cat);
+            
+            // Limiter à 8 produits pour le carousel
+            if (products.size() > 8) {
+                products = products.subList(0, 8);
+            }
+            
+            // Mettre à jour l'UI sur le thread JavaFX
+            List<Product> finalProducts = products;
+            Platform.runLater(() -> {
+                cardsContainer.getChildren().clear();
+                for (Product product : finalProducts) {
+                    VBox card = createMiniCard(product);
+                    cardsContainer.getChildren().add(card);
+                }
+            });
+        }).start();
     }
 
     private void scrollSmoothly(int direction) {
@@ -118,25 +143,65 @@ public class CarouselView {
         timeline.play();
     }
 
-    private VBox createMiniCard(String nom, double prix) {
+    private VBox createMiniCard(Product product) {
         VBox card = new VBox(5);
         card.setAlignment(Pos.CENTER);
         card.setPrefSize(CARD_WIDTH, 220);
         card.setStyle("-fx-background-color: white; -fx-background-radius: 15; " +
                 "-fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.04), 8, 0, 0, 2);");
 
-        Circle img = new Circle(40, Color.web("#F1F1F1"));
-        img.setCursor(Cursor.HAND);
-        img.setOnMouseClicked(e -> { if (onShowDetails != null) onShowDetails.accept(nom, prix); });
+        // Image du produit (ou placeholder si pas d'image)
+        Node imageNode;
+        if (product.getPhotoUrl() != null && !product.getPhotoUrl().isEmpty()) {
+            try {
+                ImageView imageView = new ImageView();
+                Image image = new Image(ApiConfig.getImageUrl(product.getPhotoUrl()), true);
+                imageView.setImage(image);
+                imageView.setFitWidth(80);
+                imageView.setFitHeight(80);
+                imageView.setPreserveRatio(true);
+                imageView.setSmooth(true);
+                imageView.setCursor(Cursor.HAND);
+                imageView.setOnMouseClicked(e -> { 
+                    if (onShowDetails != null) onShowDetails.accept(product.getNom(), (double) product.getPrix()); 
+                });
+                imageNode = imageView;
+            } catch (Exception e) {
+                // En cas d'erreur de chargement d'image, utiliser un placeholder
+                Circle img = new Circle(40, Color.web("#F1F1F1"));
+                img.setCursor(Cursor.HAND);
+                img.setOnMouseClicked(mouseEvent -> {
+                    if (onShowDetails != null) onShowDetails.accept(product.getNom(), (double) product.getPrix()); 
+                });
+                imageNode = img;
+            }
+        } else {
+            Circle img = new Circle(40, Color.web("#F1F1F1"));
+            img.setCursor(Cursor.HAND);
+            img.setOnMouseClicked(e -> { 
+                if (onShowDetails != null) onShowDetails.accept(product.getNom(), (double) product.getPrix()); 
+            });
+            imageNode = img;
+        }
 
-        Text t = new Text(nom); t.setFont(Font.font("System", FontWeight.BOLD, 12));
-        Text p = new Text(String.format("%.2f€", prix)); p.setFill(Color.web(colorAccent));
+        // Nom du produit (tronquer si trop long)
+        String nom = product.getNom();
+        if (nom.length() > 20) {
+            nom = nom.substring(0, 17) + "...";
+        }
+        Text t = new Text(nom);
+        t.setFont(Font.font("System", FontWeight.BOLD, 12));
+        
+        Text p = new Text(String.format("%.2f€", product.getPrix()));
+        p.setFill(Color.web(colorAccent));
 
         Button btn = new Button("GO");
         btn.setStyle("-fx-background-color: " + colorAccent + "; -fx-text-fill: white; -fx-background-radius: 10; -fx-font-size: 10;");
-        btn.setOnAction(e -> { if (onAddToCart != null) onAddToCart.accept(nom, prix); });
+        btn.setOnAction(e -> { 
+            if (onAddToCart != null) onAddToCart.accept(product.getNom(), (double) product.getPrix()); 
+        });
 
-        card.getChildren().addAll(img, t, p, btn);
+        card.getChildren().addAll(imageNode, t, p, btn);
         return card;
     }
 }

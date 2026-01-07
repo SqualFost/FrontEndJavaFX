@@ -1,5 +1,8 @@
 package com.example.projetjavafx.ui.navbar;
 
+import com.example.projetjavafx.model.Categorie;
+import com.example.projetjavafx.service.ApiService;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
@@ -14,6 +17,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 public class NavbarView {
@@ -22,6 +26,8 @@ public class NavbarView {
     private final String colorAccent;
     private String categorieActuelle;
     private final Consumer<String> onCategoryChange;
+    private final ApiService apiService;
+
     private final Runnable onKitchenAction;
     private HBox root;
     private HBox categoriesBox;
@@ -35,6 +41,7 @@ public class NavbarView {
         this.colorText = colorText;
         this.colorAccent = colorAccent;
         this.onCategoryChange = onCategoryChange;
+        this.apiService = new ApiService();
         this.onKitchenAction = onKitchenAction;
         this.root = createNavbar();
     }
@@ -74,17 +81,60 @@ public class NavbarView {
 
     private void rebuildCategories() {
         categoriesBox.getChildren().clear();
-        String[] types = {"ENTRÉES", "NOUILLES", "SUSHIS", "FRITURES", "DESSERTS", "BOISSONS"};
-        for (String type : types) {
-            categoriesBox.getChildren().add(createNavButton(type));
-        }
+
+        // Charger les catégories depuis le backend de manière asynchrone
+        new Thread(() -> {
+            List<Categorie> categories = apiService.getAllCategories();
+
+            // Mettre à jour l'UI sur le thread JavaFX
+            Platform.runLater(() -> {
+                categoriesBox.getChildren().clear();
+
+                if (categories.isEmpty()) {
+                    // Si aucune catégorie n'est disponible, utiliser des catégories par défaut
+                    String[] defaultTypes = {"ENTRÉES", "NOUILLES", "SUSHIS", "FRITURES", "DESSERTS", "BOISSONS"};
+                    for (String type : defaultTypes) {
+                        categoriesBox.getChildren().add(createNavButton(type));
+                    }
+                } else {
+                    // Afficher les catégories du backend
+                    for (Categorie categorie : categories) {
+                        categoriesBox.getChildren().add(createNavButton(categorie.getNom()));
+                    }
+                }
+            });
+        }).start();
+    }
+
+    /**
+     * Normalise une chaîne pour la comparaison (supprime accents, espaces, met en majuscules).
+     */
+    private String normalizeString(String str) {
+        if (str == null) return "";
+        return str.toUpperCase()
+                .replace("É", "E")
+                .replace("È", "E")
+                .replace("Ê", "E")
+                .replace("Ë", "E")
+                .replace("À", "A")
+                .replace("Â", "A")
+                .replace("Ä", "A")
+                .replace("Ù", "U")
+                .replace("Û", "U")
+                .replace("Ü", "U")
+                .replace("Ô", "O")
+                .replace("Ö", "O")
+                .replace("Ç", "C")
+                .replace(" ", "")
+                .trim();
     }
 
     private VBox createNavButton(String nom) {
         VBox container = new VBox(5);
         container.setAlignment(Pos.CENTER);
 
-        boolean isActive = nom.equals(categorieActuelle);
+        // Comparaison normalisée pour gérer les accents et la casse
+        boolean isActive = normalizeString(nom).equals(normalizeString(categorieActuelle));
 
         Text txt = new Text(nom);
         txt.setFill(isActive ? Color.web(colorAccent) : Color.web("#888"));
