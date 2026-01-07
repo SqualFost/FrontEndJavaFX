@@ -6,7 +6,6 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Separator;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
 import javafx.scene.layout.Region;
@@ -72,8 +71,8 @@ public class CartSidebarView {
             HBox actions = new HBox(5);
             actions.setAlignment(Pos.CENTER);
 
-            Button edit = new Button("✏");
-            edit.setStyle("-fx-background-color: transparent; -fx-cursor: hand;");
+            Button edit = new Button("✏️ ");
+            edit.setStyle("-fx-background-color: transparent; -fx-cursor: hand; -fx-text-fill: blue;");
             edit.setOnAction(e -> {
                 if (onEditItem != null) {
                     onEditItem.accept(item);
@@ -81,9 +80,14 @@ public class CartSidebarView {
             });
 
             Button minus = new Button("-");
+            minus.setStyle("-fx-background-color: #FAFAFA;  -fx-cursor: hand; -fx-border-radius: 10;");
             minus.setOnAction(e -> {
                 if (item.getQuantite() > 1) {
                     item.setQuantite(item.getQuantite() - 1);
+                    refresh();
+                }
+                else if (item.getQuantite() == 1) {
+                    cartService.supprimerItem(item);
                     refresh();
                 }
             });
@@ -91,19 +95,13 @@ public class CartSidebarView {
             Text quantityText = new Text(String.valueOf(item.getQuantite()));
 
             Button plus = new Button("+");
+            plus.setStyle("-fx-background-color: #FAFAFA; -fx-cursor: hand; -fx-border-radius: 10;");
             plus.setOnAction(e -> {
                 item.setQuantite(item.getQuantite() + 1);
                 refresh();
             });
 
-            Button delete = new Button("🗑");
-            delete.setStyle("-fx-text-fill: red; -fx-background-color: transparent;");
-            delete.setOnAction(e -> {
-                cartService.supprimerItem(item);
-                refresh();
-            });
-
-            actions.getChildren().addAll(edit, minus, quantityText, plus, delete);
+            actions.getChildren().addAll(edit, minus, quantityText, plus);
             row.getChildren().addAll(info, spacer, actions);
             itemList.getChildren().add(row);
 
@@ -151,7 +149,7 @@ public class CartSidebarView {
         btnPay.setPrefHeight(60);
         btnPay.setStyle("-fx-background-color: " + colorAccent + "; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 15;");
         btnPay.setOnAction(e -> {
-            if (onPayAction != null && (Float.parseFloat(totalAmountDisplay.getText().replace("€", "").replace(",", "")) > 0)) {
+            if (onPayAction != null && cartService.calculerTotal() > 0) {
                 onPayAction.run();
             }
             else
