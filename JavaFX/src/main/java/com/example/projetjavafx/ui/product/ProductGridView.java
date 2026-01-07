@@ -57,7 +57,7 @@ public class ProductGridView {
         Text p = new Text(String.format("%.2f€", prix));
 
         Button btn = new Button("PERSONNALISER");
-        btn.setStyle("-fx-background-color: #F0F0F0; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05); -fx-font-weight: bold; -fx-text-fill: " + colorAccent + ";");
+        btn.setStyle("-fx-background-color: #F0F0F0; -fx-background-radius: 12; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.05), 10, 0, 0, 0); -fx-font-weight: bold; -fx-text-fill: " + colorAccent + ";");
         btn.setCursor(javafx.scene.Cursor.HAND);
         btn.setOnAction(e -> onShowDetails.accept(nom, prix));
 
