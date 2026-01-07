@@ -1,0 +1,76 @@
+.root {
+    -fx-background-color: #ecf0f1; /* Gris très clair */
+}
+
+.titre-principal {
+    -fx-font-size: 60px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.sous-titre {
+    -fx-font-size: 24px;
+    -fx-text-fill: #7f8c8d;
+}
+
+.bouton-action {
+    -fx-background-color: #e67e22;
+    -fx-text-fill: white;
+    -fx-font-size: 30px;
+    -fx-background-radius: 10;
+    -fx-padding: 20 50;
+    -fx-cursor: hand;
+}
+
+.bouton-action:hover {
+    -fx-background-color: #d35400; /* Orange plus foncé */
+    -fx-scale-x: 1.05; /* Grossit légèrement */
+    -fx-scale-y: 1.05;
+}
+
+.bouton-secondaire {
+    -fx-background-color: #95a5a6; /* Gris béton */
+    -fx-text-fill: white;
+    -fx-font-size: 20px; /* Plus petit que l'action principale */
+    -fx-background-radius: 10;
+    -fx-padding: 10 30;
+    -fx-cursor: hand;
+}
+
+.bouton-secondaire:hover {
+    -fx-background-color: #7f8c8d;
+}
+
+.carte-produit {
+    -fx-background-color: white;
+    -fx-background-radius: 20;
+    -fx-padding: 20;
+    /* Une petite ombre pour donner du relief */
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5);
+}
+
+.nom-produit {
+    -fx-font-size: 30px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #2c3e50;
+}
+
+.prix-produit {
+    -fx-font-size: 24px;
+    -fx-text-fill: #7f8c8d;
+}
+
+.bouton-vert {
+    -fx-background-color: #27ae60;
+    -fx-text-fill: white;
+    -fx-font-size: 30px;
+    -fx-background-radius: 10;
+    -fx-padding: 20 50;
+    -fx-cursor: hand;
+}
+
+.bouton-vert:hover {
+    -fx-background-color: #2ecc71; /* Vert plus clair */
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
