@@ -46,10 +46,6 @@ public class CartSidebarView {
         return root;
     }
 
-    /**
-     * Reconstruit la liste des items et le total.
-     * À appeler après toute modification du panier.
-     */
     public void refresh() {
         itemList.getChildren().clear();
 
@@ -76,7 +72,6 @@ public class CartSidebarView {
             HBox actions = new HBox(5);
             actions.setAlignment(Pos.CENTER);
 
-            // Bouton Modifier ✏️
             Button edit = new Button("✏");
             edit.setStyle("-fx-background-color: transparent; -fx-cursor: hand;");
             edit.setOnAction(e -> {
@@ -85,7 +80,6 @@ public class CartSidebarView {
                 }
             });
 
-            // Boutons +/-
             Button minus = new Button("-");
             minus.setOnAction(e -> {
                 if (item.getQuantite() > 1) {
@@ -102,7 +96,6 @@ public class CartSidebarView {
                 refresh();
             });
 
-            // Bouton Supprimer 🗑
             Button delete = new Button("🗑");
             delete.setStyle("-fx-text-fill: red; -fx-background-color: transparent;");
             delete.setOnAction(e -> {
@@ -119,7 +112,6 @@ public class CartSidebarView {
         totalAmountDisplay.setText(String.format("%.2f€", Math.max(0, total)));
     }
 
-    // --- Construction du panneau ---
 
     private VBox createOrderSidebar() {
         VBox sidebar = new VBox(20);

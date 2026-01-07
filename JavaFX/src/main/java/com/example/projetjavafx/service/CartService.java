@@ -6,18 +6,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Service de gestion du panier (logique métier).
- * Ne contient pas de code JavaFX.
- */
 public class CartService {
 
     private final List<CartItem> cartItems = new ArrayList<>();
 
-    /**
-     * Retourne une vue non modifiable de la liste des items.
-     * Les objets eux-mêmes restent modifiables.
-     */
     public List<CartItem> getItems() {
         return Collections.unmodifiableList(cartItems);
     }

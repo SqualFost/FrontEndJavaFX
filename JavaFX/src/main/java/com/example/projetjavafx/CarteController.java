@@ -11,20 +11,18 @@ import java.io.IOException;
 
 public class CarteController {
 
-    // 1. Ouvrir le Pop-up Détail (fenêtre par-dessus)
     @FXML
     protected void ouvrirDetail() throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(BorneApplication.class.getResource("detail.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 600, 400); // Petite taille pour le pop-up
+        Scene scene = new Scene(fxmlLoader.load(), 600, 400);
 
         Stage popupStage = new Stage();
-        popupStage.initModality(Modality.APPLICATION_MODAL); // Bloque la fenêtre derrière !
+        popupStage.initModality(Modality.APPLICATION_MODAL);
         popupStage.setTitle("Détail du produit");
         popupStage.setScene(scene);
-        popupStage.showAndWait(); // Attend la fermeture du pop-up
+        popupStage.showAndWait();
     }
 
-    // 2. Aller à la page Panier (Changement de scène)
     @FXML
     protected void allerAuPanier(ActionEvent event) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(BorneApplication.class.getResource("panier.fxml"));

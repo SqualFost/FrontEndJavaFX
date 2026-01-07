@@ -3,11 +3,13 @@ com\example\projetjavafx\model\CartItem.class
 com\example\projetjavafx\ui\dialog\ProductDetailsDialog.class
 com\example\projetjavafx\BorneApplication.class
 com\example\projetjavafx\RecapController.class
+com\example\projetjavafx\model\ClientOrder.class
 com\example\projetjavafx\ui\cart\CartSidebarView.class
 com\example\projetjavafx\ui\navbar\NavbarView.class
 com\example\projetjavafx\Launcher.class
 com\example\projetjavafx\ui\carousel\CarouselView.class
 module-info.class
+com\example\projetjavafx\CuisineController.class
 com\example\projetjavafx\service\CartService.class
 com\example\projetjavafx\HomeController.class
 com\example\projetjavafx\CarteController.class

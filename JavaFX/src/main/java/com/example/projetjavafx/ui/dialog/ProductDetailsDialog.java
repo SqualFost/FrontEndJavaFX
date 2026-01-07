@@ -18,14 +18,9 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-/**
- * Popup de personnalisation d'un produit (détails + options).
- * Ne connaît pas la logique métier du panier : elle est transmise via un callback.
- */
 public class ProductDetailsDialog {
 
     private ProductDetailsDialog() {
-        // utilitaire statique
     }
 
     public static void show(StackPane root,

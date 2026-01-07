@@ -56,12 +56,16 @@ public class HomeController {
         contentLayout.setStyle("-fx-background-color: " + COLOR_BG + ";");
 
         // A. Navbar
-        navbarView = new NavbarView(categorieActuelle, COLOR_TEXT, COLOR_ACCENT, cat -> {
-            this.categorieActuelle = cat;
-            carouselView.setCategory(cat);
-            productGridView.updateContent(cat);
-            menuTitle.setText("NOTRE CARTE : " + cat);
-        });
+        navbarView = new NavbarView(categorieActuelle, COLOR_TEXT, COLOR_ACCENT,
+                cat -> {
+                    this.categorieActuelle = cat;
+                    carouselView.setCategory(cat);
+                    productGridView.updateContent(cat);
+                    menuTitle.setText("NOTRE CARTE : " + cat);
+                },
+                () -> allerVersCuisine()
+        );
+        contentLayout.setTop(navbarView.getView());
         contentLayout.setTop(navbarView.getView());
         cartSidebarView = new CartSidebarView(cartService, COLOR_ACCENT,
                 item -> showProductDetails(item.getNom(), item.getPrixUnitaire(), item),
@@ -129,6 +133,19 @@ public class HomeController {
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("Erreur impossible de charger recap.fxml");
+        }
+    }
+    private void allerVersCuisine() {
+        try {
+            System.out.println("Switch vers écran cuisine...");
+            FXMLLoader fxmlLoader = new FXMLLoader(BorneApplication.class.getResource("cuisine.fxml"));
+            Stage stage = (Stage) rootKiosk.getScene().getWindow();
+            Scene scene = new Scene(fxmlLoader.load(), 1920, 1080);
+            stage.setScene(scene);
+            stage.setFullScreen(true);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Erreur impossible de charger cuisine.fxml");
         }
     }
     private void showProductDetails(String nom, double prix, CartItem itemAModifier) {

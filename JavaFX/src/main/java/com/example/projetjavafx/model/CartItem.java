@@ -3,10 +3,6 @@ package com.example.projetjavafx.model;
 import java.util.List;
 import java.util.Objects;
 
-/**
- * Représente un article dans le panier.
- * Modèle simple sans dépendance à JavaFX.
- */
 public class CartItem {
 
     private String nom;

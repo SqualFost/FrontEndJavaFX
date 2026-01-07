@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox spacing="20" stylesheets="@style.css" styleClass="root"
+      xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.example.projetjavafx.CuisineController">
+
+    <padding><Insets top="30" right="30" bottom="30" left="30"/></padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="30">
+        <Button text="⬅ RETOUR" onAction="#retourBorne" styleClass="bouton-secondaire"/>
+
+        <Label text="SUIVI CUISINE" styleClass="titre-principal" style="-fx-font-size: 40px;"/>
+    </HBox>
+
+    <HBox spacing="30" VBox.vgrow="ALWAYS">
+
+        <VBox HBox.hgrow="ALWAYS" spacing="15"
+              style="-fx-background-color: rgba(230, 126, 34, 0.1); -fx-background-radius: 20; -fx-padding: 20;">
+            <Label text="🔥 EN PRÉPARATION" styleClass="nom-produit" style="-fx-text-fill: #d35400;"/>
+            <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent;" VBox.vgrow="ALWAYS">
+                <VBox fx:id="containerEnPrepa" spacing="15"/>
+            </ScrollPane>
+        </VBox>
+
+        <VBox HBox.hgrow="ALWAYS" spacing="15"
+              style="-fx-background-color: rgba(39, 174, 96, 0.1); -fx-background-radius: 20; -fx-padding: 20;">
+            <Label text="✅ PRÊT À SERVIR" styleClass="nom-produit" style="-fx-text-fill: #27ae60;"/>
+            <ScrollPane fitToWidth="true" style="-fx-background: transparent; -fx-background-color: transparent;" VBox.vgrow="ALWAYS">
+                <VBox fx:id="containerPret" spacing="15"/>
+            </ScrollPane>
+        </VBox>
+
+    </HBox>
+</VBox>

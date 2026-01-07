@@ -29,7 +29,6 @@ public class FilterMenuView {
     private void buildFilters() {
         ToggleGroup group = new ToggleGroup();
 
-        // Définition des filtres
         String[] filters = {"Tout", "🌿 Vegan", "🌶️ Épicé", "⭐ Populaire", "💎 Premium"};
 
         for (String filter : filters) {
@@ -37,14 +36,12 @@ public class FilterMenuView {
             btn.setToggleGroup(group);
             btn.setFont(Font.font("System", FontWeight.MEDIUM, 13));
 
-            // Style par défaut (Chip)
             String baseStyle = "-fx-background-radius: 20; -fx-padding: 8 20; -fx-cursor: hand; -fx-border-width: 1; ";
             String idleStyle = baseStyle + "-fx-background-color: white; -fx-text-fill: #555; -fx-border-color: #DDD;";
             String activeStyle = baseStyle + "-fx-background-color: " + colorAccent + "; -fx-text-fill: white; -fx-border-color: " + colorAccent + ";";
 
             btn.setStyle(idleStyle);
 
-            // Changement de style visuel lors de la sélection
             btn.selectedProperty().addListener((obs, oldVal, newVal) -> {
                 btn.setStyle(newVal ? activeStyle : idleStyle);
                 if (newVal && onFilterChanged != null) {

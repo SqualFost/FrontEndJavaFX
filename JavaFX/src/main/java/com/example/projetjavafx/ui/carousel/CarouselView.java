@@ -132,7 +132,7 @@ public class CarouselView {
         Text t = new Text(nom); t.setFont(Font.font("System", FontWeight.BOLD, 12));
         Text p = new Text(String.format("%.2f€", prix)); p.setFill(Color.web(colorAccent));
 
-        Button btn = new Button("GO"); // Bouton très compact
+        Button btn = new Button("GO");
         btn.setStyle("-fx-background-color: " + colorAccent + "; -fx-text-fill: white; -fx-background-radius: 10; -fx-font-size: 10;");
         btn.setOnAction(e -> { if (onAddToCart != null) onAddToCart.accept(nom, prix); });
 

@@ -22,26 +22,26 @@ public class NavbarView {
     private final String colorAccent;
     private String categorieActuelle;
     private final Consumer<String> onCategoryChange;
-
+    private final Runnable onKitchenAction;
     private HBox root;
     private HBox categoriesBox;
 
     public NavbarView(String initialCategory,
                       String colorText,
                       String colorAccent,
-                      Consumer<String> onCategoryChange) {
+                      Consumer<String> onCategoryChange,
+                      Runnable onKitchenAction) {
         this.categorieActuelle = initialCategory;
         this.colorText = colorText;
         this.colorAccent = colorAccent;
         this.onCategoryChange = onCategoryChange;
+        this.onKitchenAction = onKitchenAction;
         this.root = createNavbar();
     }
 
     public HBox getView() {
         return root;
     }
-
-    // --- Construction de la barre ---
 
     private HBox createNavbar() {
         HBox navbar = new HBox(30);
@@ -60,11 +60,15 @@ public class NavbarView {
 
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
-
+        Button btnKitchen = new Button("👨‍🍳");
+        btnKitchen.setStyle("-fx-background-color: #EEE; -fx-cursor: hand; -fx-font-size: 16; -fx-background-radius: 50;");
+        btnKitchen.setOnAction(e -> {
+            if (onKitchenAction != null) onKitchenAction.run();
+        });
         Button btnLogin = new Button("CONNEXION");
         btnLogin.setStyle("-fx-background-color: " + colorText + "; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 20; -fx-padding: 8 25;");
 
-        navbar.getChildren().addAll(logo, categoriesBox, spacer, btnLogin);
+        navbar.getChildren().addAll(logo, categoriesBox, spacer, btnKitchen, btnLogin);
         return navbar;
     }
 
@@ -94,7 +98,7 @@ public class NavbarView {
 
         container.setOnMouseClicked(e -> {
             categorieActuelle = nom;
-            rebuildCategories(); // met à jour le style actif
+            rebuildCategories();
             if (onCategoryChange != null) {
                 onCategoryChange.accept(nom);
             }
